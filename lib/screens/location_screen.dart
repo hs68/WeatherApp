@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import 'package:clima/services/weather.dart';
-import  'city_screen.dart';
+import 'city_screen.dart';
 
 //const deg=0x00B0;
 class LocationScreen extends StatefulWidget {
@@ -14,8 +14,8 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   int temperature;
   int condition;
-  String weatherIcon,message,cityname;
-  WeatherModel weatherdat=WeatherModel();
+  String weatherIcon, message, cityname;
+  WeatherModel weatherdat = WeatherModel();
 
   @override
   void initState() {
@@ -23,30 +23,28 @@ class _LocationScreenState extends State<LocationScreen> {
     super.initState();
     updateui(widget.weatherdata);
   }
-  void updateui(dynamic weatherdata)
-  {
+
+  void updateui(dynamic weatherdata) {
     setState(() {
-      if(weatherdata==null)
-        {
-          temperature=0;
-          weatherIcon='error';
-          message='Unable to fetch weather';
-          cityname='';
-          return;
-        }
-      double temp=weatherdata['main']['temp'];
-      temp-=273.15;
-      temperature=temp.toInt();
-      condition=weatherdata['weather'][0]['id'];
-      cityname=weatherdata['name'];
-      weatherIcon=weatherdat.getWeatherIcon(condition);
-      message=weatherdat.getMessage(temperature);
+      if (weatherdata == null) {
+        temperature = 0;
+        weatherIcon = 'error';
+        message = 'Unable to fetch weather';
+        cityname = '';
+        return;
+      }
+      double temp = weatherdata['main']['temp'];
+      temp -= 273.15;
+      temperature = temp.toInt();
+      condition = weatherdata['weather'][0]['id'];
+      cityname = weatherdata['name'];
+      weatherIcon = weatherdat.getWeatherIcon(condition);
+      message = weatherdat.getMessage(temperature);
       print(temperature);
       print(condition);
     });
-
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,8 +67,8 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   FlatButton(
-                    onPressed: () async{
-                      var weatherdata=await weatherdat.getweatherdata();
+                    onPressed: () async {
+                      var weatherdata = await weatherdat.getweatherdata();
                       updateui(weatherdata);
                     },
                     child: Icon(
@@ -79,17 +77,21 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ),
                   FlatButton(
-                    onPressed: () async{
-                      var typecityname=await Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return CityScreen();
-                      },),);
+                    onPressed: () async {
+                      var typecityname = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return CityScreen();
+                          },
+                        ),
+                      );
                       print(typecityname);
-                      if(typecityname!=null)
-                        {
-                          var weather=await weatherdat.getcityweather(typecityname);
-                          updateui(weather);
-                        }
-
+                      if (typecityname != null) {
+                        var weather =
+                            await weatherdat.getcityweather(typecityname);
+                        updateui(weather);
+                      }
                     },
                     child: Icon(
                       Icons.location_city,
@@ -103,7 +105,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '$temperature',
+                      '$temperature°',
                       style: kTempTextStyle,
                     ),
                     Text(
